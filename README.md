@@ -18,6 +18,21 @@ into the `mapserver` container;
 If any of these values is changed you'll also need to edit the `mapfile` so
 that `mapserver` can connect to the database.
 
+## Deployment
+
+We provide a simple `bash` script that can be used to easily create a `stack` with
+all the services required.
+
+```
+$ ./deploy.sh radarms docker-stack.yml stack.env
+```
+
+The script expects three arguments:
+
+* The name that will be used for the `stack` (ex. `radarms`);
+* The compose file;
+* The `env` file with the `stack` configuration;
+
 ## Samples
 
 I'm including a sample `vrt` that includes everything that is needed to serve the
@@ -61,4 +76,48 @@ optional arguments:
   --timestamp T        Timestamp of the target radar image, defaults to the
                        current date and time
   --template TEMPLATE  Template VRT file used to create the new VRT
+```
+
+### Database updating
+
+The provided script allows to update the time index database directly from the command-line
+while making a few assumptions:
+
+* The database is deployed in a docker container on the same machine where the
+script is being ran;
+
+The update script requires a few arguments to do everything it needs to do. The `timestamp`
+argument tells which timestamp will be inserted into the database, the `filename` argument
+specifies the file path relative to the mapserver installation where the `vrt` file is
+located. Also, we need to specify the name of the docker container for the database via the
+`container` argument and we can provide a custom `connection` string for the `psql` command
+that performs the `INSERT`
+
+```
+$ ./postgis_insert.py --timestamp 2019-12-11T15:00 --filename /data/pcr-2019-12-11T1500.vrt --container radarms_database.1.muh8qktjrrj9eeqxgpdbo33sr
+```
+
+> The ` connection` argument is optional and defaults to the string
+> `postgresql://radar:radar@localhost`
+
+Run the script with the `help` argument to see more information about running this script.
+
+```
+$ ./postgis_insert.py --help
+usage: postgis_insert.py [-h] --timestamp TIMESTAMP --filename FILENAME
+                         --container CONTAINER [--connection CONNECTION]
+
+Update the time dimension database
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --timestamp TIMESTAMP
+                        Timestamp of the target radar image, defaults to the
+                        current date and time
+  --filename FILENAME   Absolute filename for the respective VRT for the
+                        passed timestamp
+  --container CONTAINER
+                        Container name where we will run the psql command
+  --connection CONNECTION
+                        Connection string for the psql command
 ```
