@@ -12,14 +12,13 @@ services:
     image: kartoza/postgis:12.0
     volumes:
       - "${POSTGRES_INIT}:/docker-entrypoint-initdb.d/setup-db.sql"
+      - db-data:/var/lib/postgresql/
     ports:
       - "5432:5432"
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASS: ${POSTGRES_PASS}
       POSTGRES_DBNAME: ${POSTGRES_DBNAME}
-    volumes:
-      - db-data:/var/lib/postgresql/
 
 volumes:
   db-data:
