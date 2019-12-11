@@ -1,0 +1,21 @@
+version: '3'
+services:
+  mapserver:
+    image: camptocamp/mapserver:7.4
+    volumes:
+      - "${DATA_DIR}:/data"
+      - "${MAPSERVER_CONFIG}:/etc/mapserver/radar.map"
+    ports:
+      - "80:80"
+
+  database:
+    image: kartoza/postgis:12.0
+    volumes:
+      - "${POSTGIS_INIT}:/docker-entrypoint-initdb.d/setup-db.sql"
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASS: ${POSTGRES_PASS}
+      POSTGRES_DBNAME: ${POSTGRES_DBNAME}
+
