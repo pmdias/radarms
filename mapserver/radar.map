@@ -23,7 +23,7 @@ MAP
     NAME    "radar_pcr_index"
     TYPE    POLYGON
     STATUS  ON
-    DEBUG   OFF
+    DEBUG   ON
 
     DATA            "geom from radar_index"
     CONNECTION      "dbname=radar host=database user=radar password=radar port=5432"
@@ -53,7 +53,7 @@ MAP
     NAME      "radar_pcr"
     TYPE      RASTER
     STATUS    ON
-    DEBUG     OFF
+    DEBUG     ON
     TILEITEM  "filename"
     TILEINDEX "radar_pcr_index"
     FILTER    (`[datetime]` = `2019-12-10T18:30:00`)
@@ -61,6 +61,15 @@ MAP
     EXTENT -1386461.44 4030348.05 -483734.95 5433442.86
     PROJECTION
         "init=epsg:3857"
+    END
+
+    METADATA
+        "wms_title"           "radar_pcr"
+        "wms_srs"             "EPSG:3857"
+        "wms_timeextent"      "2019-01-01/2019-12-31/PT15M"
+        "wms_timeitem"        "datetime"
+        "wms_timedefault"     "2019-12-10T18:30:00"
+        "wms_enable_request"  "* !GetFeatureInfo"
     END
   END
 
