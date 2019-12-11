@@ -2,6 +2,25 @@
 
 Web Map Service for the IPMA radar images.
 
+## TL,DR
+
+Setup a new docker stack with the `mapserver` and `postgis` services and insert a new
+entry to the database:
+
+```
+$ git clone https://gitlab.com/pedro.dias/radarms.git
+$ ./deploy.sh radarms docker-stack.yml stack.env
+$ ./create_vrt.py --timestamp 2019-12-11T15:00 ./data/pcr-%Y-%m-%dT%H%M.vrt
+$ ./postgis_insert.py --timestamp 2019-12-11T15:00 --filename /data/pcr-2019-12-11T1500.vrt --container `docker container ls --format '{{ .Names }}' | grep '_database'`
+```
+
+You can now use the `WMS` service from `mapserver`. For more information read below and read
+the files included in this repository.
+
+To automate the process of creating the `vrt` files and the database insertions, wrap
+the `create_vrt.py` and `postgis_insert.py` scripts with a simple `bash` script and
+run via `crontab`.
+
 ## Configuration
 
 The following is a brief explanation of the environment variables
@@ -121,3 +140,10 @@ optional arguments:
   --connection CONNECTION
                         Connection string for the psql command
 ```
+
+## Notes
+
+* The current stack creates a `volume` in order to persist the database data. If you want
+to use another setup, edit the ` docker-stack.yml` file;
+* Change the `wms_onlineresource` entry inside the `mapserver/radar.map` so that the `WMS`
+uses the correct online resource;
