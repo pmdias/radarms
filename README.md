@@ -40,6 +40,9 @@ the script:
 $ ./create_vrt.py --timestamp 2019-12-11T12:23 pcr-%Y-%m-%dT%H%M.vrt
 ```
 
+> Please note that the `output` path must include the mounted directory that was indicated
+> on the `DATA_DIR` environment variable during the stack deployment.
+
 If no timestamp is passed to the script, it assumes the current date and time and proceeds
 from here. For more information, run the script with the `--help` flag
 
